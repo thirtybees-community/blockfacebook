@@ -1,0 +1,13 @@
+module_name: Block Facebook
+compatible_versions: 1.0.0+
+author: thirty bees
+category: front office
+tags:
+  - facebook
+  - social media
+  - front office
+description_short: This block allows you to display a Facebook page iframe on your site showing your Facebook page.
+description: description.md
+images:
+  - image-1.png
+license: AFL
