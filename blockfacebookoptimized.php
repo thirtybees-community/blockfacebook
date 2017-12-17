@@ -17,7 +17,7 @@
  *
  * @author    Thirty Bees <modules@thirtybees.com>
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2017 Thirty Bees
+ * @copyright 2018 thirty bees
  * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  * PrestaShop is an internationally registered trademark & property of PrestaShop SA
@@ -32,7 +32,7 @@ if (!defined('_TB_VERSION_')) {
  *
  * @since 1.0.0
  */
-class BlockFacebook extends Module
+class BlockFacebookOptimized extends Module
 {
     /**
      * BlockFacebook constructor.
@@ -41,15 +41,15 @@ class BlockFacebook extends Module
      */
     public function __construct()
     {
-        $this->name = 'blockfacebook';
+        $this->name = 'blockfacebookoptimized';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.0';
+        $this->version = '2.0.1';
         $this->author = 'thirty bees';
 
         $this->bootstrap = true;
         parent::__construct();
-        $this->displayName = $this->l('Facebook Like Box block');
-        $this->description = $this->l('Displays a block for subscribing to your Facebook Page.');
+        $this->displayName = $this->l('Facebook Like Box block Optimized for Speed');
+        $this->description = $this->l('Displays a block for subscribing to your Facebook Page that is hidden from Google');
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
     }
 
@@ -61,9 +61,9 @@ class BlockFacebook extends Module
     public function install()
     {
         return parent::install() &&
-            Configuration::updateValue('blockfacebook_url', 'https://www.facebook.com/thirtybees') &&
-            $this->registerHook('displayHome') &&
-            $this->registerHook('displayHeader');
+        Configuration::updateValue('blockfacebook_url', 'https://www.facebook.com/thirtybees') &&
+        $this->registerHook('displayHome') &&
+        $this->registerHook('displayHeader');
     }
 
     /**
@@ -88,18 +88,18 @@ class BlockFacebook extends Module
             Configuration::updateValue('blockfacebook_url', Tools::getValue('blockfacebook_url'));
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
             $this->_clearCache('blockfacebook.tpl');
-            Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+            Tools::redirectAdmin('index.php?tab=AdminModules&configure=' . $this->name . '&token=' . Tools::getAdminTokenLite('AdminModules'));
         }
 
         $html .= $this->renderForm();
         $facebookurl = Configuration::get('blockfacebook_url');
         if (!strstr($facebookurl, "facebook.com")) {
-            $facebookurl = "https://www.facebook.com/".$facebookurl;
+            $facebookurl = "https://www.facebook.com/" . $facebookurl;
         }
         $this->context->smarty->assign('facebookurl', $facebookurl);
-        $this->context->smarty->assign('facebook_js_url', $this->_path.'blockfacebook.js');
-        $this->context->smarty->assign('facebook_css_url', $this->_path.'css/blockfacebook.css');
-        $html .= $this->context->smarty->fetch($this->local_path.'views/admin/_configure/preview.tpl');
+        $this->context->smarty->assign('facebook_js_url', $this->_path . 'blockfacebook.js');
+        $this->context->smarty->assign('facebook_css_url', $this->_path . 'css/blockfacebook.css');
+        $html .= $this->context->smarty->fetch($this->local_path . 'views/admin/_configure/preview.tpl');
 
         return $html;
     }
@@ -113,13 +113,13 @@ class BlockFacebook extends Module
             'form' => array(
                 'legend' => array(
                     'title' => $this->l('Settings'),
-                    'icon'  => 'icon-cogs',
+                    'icon' => 'icon-cogs',
                 ),
-                'input'  => array(
+                'input' => array(
                     array(
-                        'type'  => 'text',
+                        'type' => 'text',
                         'label' => $this->l('Facebook link (full URL is required)'),
-                        'name'  => 'blockfacebook_url',
+                        'name' => 'blockfacebook_url',
                     ),
                 ),
                 'submit' => array(
@@ -131,19 +131,20 @@ class BlockFacebook extends Module
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table = $this->table;
-        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
         $this->fields_form = array();
 
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitModule';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules',
+                false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
-            'languages'    => $this->context->controller->getLanguages(),
-            'id_language'  => $this->context->language->id,
+            'languages' => $this->context->controller->getLanguages(),
+            'id_language' => $this->context->language->id,
         );
 
         return $helper->generateForm(array($formFields));
@@ -176,8 +177,8 @@ class BlockFacebook extends Module
      */
     protected function _assignMedia()
     {
-        $this->context->controller->addCss(($this->_path).'css/blockfacebook.css');
-        $this->context->controller->addJS(($this->_path).'blockfacebook.js');
+        $this->context->controller->addCss(($this->_path) . 'css/blockfacebook.css');
+        $this->context->controller->addJS(($this->_path) . 'blockfacebook.js');
     }
 
     /**
@@ -185,15 +186,18 @@ class BlockFacebook extends Module
      */
     public function hookDisplayHome()
     {
-        if (!$this->isCached('blockfacebook.tpl', $this->getCacheId())) {
-            $facebookurl = Configuration::get('blockfacebook_url');
-            if (!strstr($facebookurl, 'facebook.com')) {
-                $facebookurl = 'https://www.facebook.com/'.$facebookurl;
+        if (strpos($_SERVER['HTTP_USER_AGENT'], "Google")) {
+        } else {
+            if (!$this->isCached('blockfacebook.tpl', $this->getCacheId())) {
+                $facebookurl = Configuration::get('blockfacebook_url');
+                if (!strstr($facebookurl, 'facebook.com')) {
+                    $facebookurl = 'https://www.facebook.com/' . $facebookurl;
+                }
+                $this->context->smarty->assign('facebookurl', $facebookurl);
             }
-            $this->context->smarty->assign('facebookurl', $facebookurl);
-        }
 
-        return $this->display(__FILE__, 'blockfacebook.tpl', $this->getCacheId());
+            return $this->display(__FILE__, 'blockfacebook.tpl', $this->getCacheId());
+        }
     }
 
     /**
@@ -201,11 +205,14 @@ class BlockFacebook extends Module
      */
     public function hookDisplayRightColumn()
     {
-        if ($this->page_name !== 'index') {
-            $this->_assignMedia();
-        }
+        if (strpos($_SERVER['HTTP_USER_AGENT'], "Google")) {
+        } else {
+            if ($this->page_name !== 'index') {
+                $this->_assignMedia();
+            }
 
-        return $this->hookDisplayHome();
+            return $this->hookDisplayHome();
+        }
     }
 
     /**
@@ -213,9 +220,12 @@ class BlockFacebook extends Module
      */
     public function hookHeader()
     {
-        $this->page_name = Dispatcher::getInstance()->getController();
-        if ($this->page_name == 'index') {
-            $this->_assignMedia();
+        if (strpos($_SERVER['HTTP_USER_AGENT'], "Google")) {
+        } else {
+            $this->page_name = Dispatcher::getInstance()->getController();
+            if ($this->page_name == 'index') {
+                $this->_assignMedia();
+            }
         }
     }
 }

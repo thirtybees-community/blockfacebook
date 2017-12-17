@@ -1,12 +1,12 @@
-module_name: Block Facebook
+module_name: Block Facebook Google Optimized
 compatible_versions: 1.0.0+
-author: thirty bees
+author: thirty bees community
 category: front office
 tags:
   - facebook
   - social media
   - front office
-description_short: This block allows you to display a Facebook page iframe on your site showing your Facebook page.
+description_short: This block allows you to display a Facebook page iframe on your site showing your Facebook page and has been optimized for Google.
 description: description.md
 images:
   - image-1.png
